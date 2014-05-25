@@ -1,18 +1,29 @@
 import MySQLdb
-import gps_record
+import os
 import logging
+import logging.config
 
+LOG_HANDLE = None
+logger = None
+def log_init():
+    global logger
+    if(logger == None):
+        logging.config.fileConfig("logger.conf")
+        logger = logging.getLogger("root")
+    return logger
+
+#grant all privileges on geolife.`*` to geolife@"%" identified by "geolife"
+#FLUSH   PRIVILEGES
 
 def connect_db():
     try:
         db = MySQLdb.connect(host="localhost" ,user="geolife",passwd="geolife",db="geolife")
         return db
     except MySQLdb.Error,e:
-        #logging.config.fileConfig("logger.conf")
-        logger = logging.getLogger("root")
-        #print "Mysql Error %d: %s" % (e.args[0], e.args[1])
-        logger.warning(e.args[0])
-        logger.warning(" Mysql Error" +  e.args[1]) 
+        warnString= "Mysql Error %d: %s" % (e.args[0], e.args[1])
+        print warnString
+        if(e.args[0] == 1045 or e.args[0] == 1044):
+            os._exit(1)
 
 def close_db(conn):
     cursor = conn.cursor()
@@ -28,7 +39,7 @@ def insert_into_db(conn, sql):
 #    print "Mysql Error %d: %s" % (e.args[0], e.args[1])
         #logger = logging.getLogger("root")
         #logger.warning(" Mysql Error sql =" + sql)
-        logging.warning(e.args[0])
+        logger.warning(e.args[0])
         #logger.warning(" Mysql Error" +  e.args[1]) 
         if(e.args[0] == 2006):
             return 2

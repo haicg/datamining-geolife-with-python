@@ -2,20 +2,25 @@ import dbutils
 import errno
 import os
 import deal_one_file
+import file_op
 import logging
 import logging.config
-import file_op
-LOG_HANDLE = None
 
+LOG_HANDLE = None
+logger = None
+def log_init():
+    global logger
+    if(logger == None):
+        logging.config.fileConfig("logger.conf")
+        logger = logging.getLogger("root")
+    return logger
 
 def storeFilePathList(name, listContext):
     #fp = file_op.open_file_write("filepathList.txt")
     file_op.store_list("filepathList.txt", name, listContext);
 
 def main():
-    logging.config.fileConfig("logger.conf")
-    logger = logging.getLogger("root")
-#    LOG_HANDLE = logging.getLogger('root')   
+    log_init();
     DataPath = "./Data/"
 #    getFilePathListL1();
     FilePathListL1Str = None
