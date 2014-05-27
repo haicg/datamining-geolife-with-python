@@ -21,12 +21,12 @@ class gps_record:
             self.gps_UTC_timestamp = time_str
         except ValueError :
             print "Value Error " 
-            logging.warning("Value Error " + userid + recordStr)
+            #logging.warning("Value Error " + userid + recordStr)
             raise ValueError
         try:
             timeArray = time.strptime(time_str, "%Y-%m-%d %H:%M:%S")
             self.gps_UTC_unix_timestamp = int(time.mktime(timeArray))
         except ValueError:
             print 'unconverted data remains'
-            logging.warning("unconverted data remains " + userid + recordStr)
+            #logging.warning("unconverted data remains " + userid + recordStr)
             raise ValueError

@@ -1,10 +1,10 @@
 #!/usr/bin/python
 #  File Name : file_op.py
 
-
+import errno
 def close_file(fp):
     try:
-           fp. close()
+        fp. close()
     except IOError as e:
         if e.errno == errno.EACCES:
             return "some default data"
@@ -20,7 +20,7 @@ def open_file(filename):
         # Not a permission error.
         raise IOError
     else:
-  #      with fp:
+#      with fp:
             return fp
 
 def open_file_write(filename):
@@ -32,14 +32,14 @@ def open_file_write(filename):
         # Not a permission error.
         raise
     else:
-  #      with fp:
+#      with fp:
             return fp
 
 def store_list(filename, listName, listContext):
     fileStr = ""
     existFlag = 0
     fp = None
-   # if(len(listContext) == 0) :
+    # if(len(listContext) == 0) :
     #    return ;
     if(len(listContext) > 0) :
         listStr = listContext[0]
@@ -84,9 +84,9 @@ def get_store_list(filename, listName):
             line = fp.readline()
             ret = line.find("listName:"+ listName)
             if(ret == -1):
-               fp.readline();
+                fp.readline();
             else:
-                existFlag = 1;
+                #existFlag = 1;
                 listContext = fp.readline();
             if(line == ""):
                 break

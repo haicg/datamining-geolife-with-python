@@ -1,7 +1,7 @@
 import os
 import errno
-import gps_record
-import dbutils
+from base import gps_record
+from sql_base import dbutils
 import logging
 import file_op
 
@@ -18,6 +18,7 @@ def insertOneRecord(recordStr, userid):
         recordObj = gps_record.gps_record(recordStr, userid)
         if(dbConn == None) :
             dbConn = dbutils.connect_db()
+        #if the connectint closed by mysal server ,then open the connection again
         while(dbutils.insert_gps_record(dbConn, recordObj) == 2 and i<4):
             dbConn = dbutils.connect_db()
             i = i+ 1
