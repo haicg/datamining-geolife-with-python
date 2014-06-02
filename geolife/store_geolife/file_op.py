@@ -38,16 +38,16 @@ def open_file_write(filename):
 def store_list(filename, listName, listContext):
     fileStr = ""
     existFlag = 0
+    listStr = ""
     fp = None
     # if(len(listContext) == 0) :
     #    return ;
-    if(len(listContext) > 0) :
-        listStr = listContext[0]
-        del listContext[0]
+ 
     for nodeStr in listContext:
         if (isinstance(nodeStr, basestring)):
 #        if type(nodeStr) is types.StringType:
-            listStr = listStr + "," + nodeStr 
+            listStr = listStr + nodeStr + ","
+    listStr = listStr.strip(',')
     try:
         fp = open_file(filename) 
         while True:
@@ -63,7 +63,7 @@ def store_list(filename, listName, listContext):
                 break
             print line
     except :
-        print "not exist";
+        print "No list exist";
     finally:
         if (fp):
             close_file(fp);

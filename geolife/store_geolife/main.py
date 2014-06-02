@@ -1,3 +1,5 @@
+import sys
+sys.path.append("..")
 from sql_base import dbutils
 import errno
 import os
@@ -35,10 +37,10 @@ def main():
         if not (FilePathListL1Str):
             FilePathListL1 = os.listdir(DataPath) #000 001
             storeFilePathList("FilePathListL1", FilePathListL1)
-    logger.warning("FilePathListL1   :  " );
-    logger.warning(FilePathListL1)
-
-    for FilePathL1 in FilePathListL1:
+    FilePathL1 = None
+    #for FilePathL1 in FilePathListL1:
+    for i in range (len(FilePathListL1)):
+        FilePathL1 = FilePathListL1.pop()
         FilePathFullL1 = DataPath+FilePathL1 #000 001
         if os.path.isdir(FilePathFullL1) :    
             userId = FilePathL1
@@ -46,7 +48,6 @@ def main():
                 int(userId, 10)
             except ValueError:
                 logger.warning("dir error " + FilePathFullL1 )
-                FilePathListL1.remove(FilePathL1)
                 storeFilePathList("FilePathListL1", FilePathListL1)
                 continue
             FilePathListL2 = os.listdir(FilePathFullL1) #Trajectory
@@ -60,11 +61,8 @@ def main():
                 print FilePathFullL2
                 if os.path.isdir(FilePathFullL2) :    
                     FilePathListL3 = os.listdir(FilePathFullL2) #20090428051631.plt
-                    logger.warning("dir list" );
-                    logger.warning(FilePathListL3)
                     for FilePathL3 in FilePathListL3:
                         extension = os.path.splitext(FilePathL3) 
-                        print extension[1]
                         if extension[1] != '.plt' :
                             logger.warning("dir error " + FilePathL3 )
                             continue;
@@ -72,9 +70,11 @@ def main():
                         if os.path.isfile(FilePathFullL3) :
                             deal_one_file.setOneFileRecord(FilePathFullL3, userId)
                         
-            FilePathListL1.remove(FilePathL1)
+            #FilePathListL1.remove(FilePathL1)
             logger.warning(FilePathListL1);
             storeFilePathList("FilePathListL1", FilePathListL1)
+            print "ok"
 
 main()
 deal_one_file.close_conn();
+print "Store the GPS data Successfully"
