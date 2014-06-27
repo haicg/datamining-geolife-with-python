@@ -1,0 +1,17 @@
+#ºöÂÔÎÄ¼ş¼ĞData /ignore the Data dir
+DATA/
+sql_script_with_data/
+.metadata/
+
+#ignore pyc,log filetype
+*.pyc
+*.log
+*.tmp
+*.txt
+#
+*.project
+*.pydevproject
+
+#
+tags
+

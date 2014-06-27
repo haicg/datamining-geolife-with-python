@@ -1,6 +1,5 @@
 #!/usr/bin/python
 #  File Name : gps_record.py
-
 import time
 import logging
 
@@ -16,6 +15,17 @@ class gps_record:
         self.gps_date = None
         self.gps_time = None
         self.gps_UTC_timestamp = None
+        self.gps_UTC_unix_timestamp = 0
+
+    def show(self):
+        print self.gps_userid
+        print self.gps_latitude 
+        print self.gps_longitude
+        print self.gps_code 
+        print self.gps_altitude 
+        print self.gps_UTC_timestamp 
+        print self.gps_UTC_unix_timestamp
+
 
     def __init_with_txt_record__(self, recordStr, userid):
         global LOG_HANDLE
@@ -59,11 +69,3 @@ class gps_record:
             #logging.warning("Value Error " + userid + recordStr)
             raise ValueError
         return self
-    def printClass(self):
-        print self.gps_userid 
-        print self.gps_latitude
-        print self.gps_longitude 
-        print self.gps_code
-        print self.gps_altitude
-        print self.gps_UTC_timestamp
-        print self.gps_UTC_unix_timestamp

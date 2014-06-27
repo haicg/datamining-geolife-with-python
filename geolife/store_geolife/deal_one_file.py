@@ -9,7 +9,6 @@ import file_op
 dbConn = None
 logger = None
 
-
 def log_init():
     global logger
     if(logger == None):

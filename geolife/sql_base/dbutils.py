@@ -73,22 +73,41 @@ def query_gps( query_str):
     if (dbconn == None ):
         dbconn = connect_db()
     if (dbconn) :
-        cur = dbconn.cursor();
-        count = cur.execute(query_str)
-        print 'There is %s rows record' %count
-        #result = cur.fetchone()
-        #results = cur.fetchall()
-        
-        results = cur.fetchmany(10)
-        for row in results:
-            gps_obj = gps_record.gps_record.__init_with_query_sql__(gps_record.gps_record(), row)
-            gps_obj.printClass();
-            gps_obj_list.append(gps_obj); 
+        try:
+            cur = dbconn.cursor();
+            count = cur.execute(query_str)
+            print 'There is %s rows record' %count
+            #result = cur.fetchone()
+            #results = cur.fetchall()
+            
+            results = cur.fetchall()
+            for row in results:
+                gps_obj = gps_record.gps_record.__init_with_query_sql__(gps_record.gps_record(), row)
+                gps_obj_list.append(gps_obj); 
+            return gps_obj_list
+        except MySQLdb.Error,e:
+            warnString = " Mysql Error sql = %d %s " % (e.args[0],e.args[1])
+            log_init().warning(warnString)
+            sys.exit(1)
 
         #print results
         #conn.commit()
-        cur.close()
-        dbconn.close()
+        #cur.close()
+        #dbconn.close()
+
+def get_gps_record(userid, m, n):
+    displist = ""
+  
+    for oneDisp in  column_name:
+        displist = displist + oneDisp + ","
+    displist = displist.strip(',')
+    if(n > 0):
+        sqlStr = 'select %s from geolife where gps_userId =%d order by gps_UTC_unix_timestamp limit %d,%d' %( displist, userid, m, n)
+    else:
+        sqlStr = 'select %s from geolife where gps_userId =%d order by gps_UTC_unix_timestamp ' %(displist, userid)
+    print sqlStr
+    return query_gps(sqlStr)
+
 
 def test():
     displist = ""

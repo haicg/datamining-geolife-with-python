@@ -13,7 +13,7 @@ logger = None
 def log_init():
     global logger
     if(logger == None):
-        logging.config.fileConfig("logger.conf")
+        logging.config.fileConfig("../logger.conf")
         logger = logging.getLogger("root")
     return logger
 
