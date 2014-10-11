@@ -10,8 +10,8 @@ logger = None
 
 
 column_name = ("gps_userid", "gps_latitude", "gps_longitude", "gps_code",\
-       "gps_altitude", "gps_UTC_timestamp", "gps_UTC_unix_timestamp")
-
+       "gps_altitude", "gps_UTC_timestamp", "gps_UTC_unix_timestamp","id")
+table_name = "geolife"
 def log_init():
     global logger
     if(logger == None):
@@ -29,11 +29,28 @@ def connect_db():
         return db
     except MySQLdb.Error,e:
         warnString= "Mysql Error %d: %s" % (e.args[0], e.args[1])
-        
+
         log_init().warning(warnString)
 
         if(e.args[0] == 1045 or e.args[0] == 1044):
             os._exit(1)
+
+def query_sql(query_str):
+    global dbconn
+    results = None
+    if (dbconn == None ):
+        dbconn = connect_db()
+    if (dbconn) :
+        try:
+            cur = dbconn.cursor();
+            count = cur.execute(query_str)
+            results = cur.fetchall()
+        except MySQLdb.Error,e:
+            warnString = " Mysql Error sql = %d %s " % (e.args[0],e.args[1])
+            log_init().warning(warnString)
+            sys.exit(1)
+    return results
+
 
 def close_db(conn):
     cursor = conn.cursor()
@@ -44,10 +61,10 @@ def close_db(conn):
 def insert_into_db(conn, sql):
     try:
         cursor = conn.cursor()
-        n = cursor.execute(sql) 
+        n = cursor.execute(sql)
         print n
     except MySQLdb.Error,e:
-#WARNING  Mysql Error sql = 1062 Duplicate entry "***" for key 'unique_key' 
+#WARNING  Mysql Error sql = 1062 Duplicate entry "***" for key 'unique_key'
         if (e.args[0] == 1062):
             return 0
         warnString = " Mysql Error sql = %d %s " % (e.args[0],e.args[1])
@@ -76,14 +93,14 @@ def query_gps( query_str):
         try:
             cur = dbconn.cursor();
             count = cur.execute(query_str)
-            print 'There is %s rows record' %count
+            #print 'There is %s rows record' %count
             #result = cur.fetchone()
             #results = cur.fetchall()
-            
+
             results = cur.fetchall()
             for row in results:
                 gps_obj = gps_record.gps_record.__init_with_query_sql__(gps_record.gps_record(), row)
-                gps_obj_list.append(gps_obj); 
+                gps_obj_list.append(gps_obj);
             return gps_obj_list
         except MySQLdb.Error,e:
             warnString = " Mysql Error sql = %d %s " % (e.args[0],e.args[1])
@@ -95,9 +112,14 @@ def query_gps( query_str):
         #cur.close()
         #dbconn.close()
 
-def get_gps_record(userid, m, n):
+'''
+userid : user id
+m: the first index
+n: the number of elements, if n <=0 ,get all the ele of user
+'''
+def get_gps_record_time_order(userid, m, n):
     displist = ""
-  
+
     for oneDisp in  column_name:
         displist = displist + oneDisp + ","
     displist = displist.strip(',')
@@ -105,10 +127,29 @@ def get_gps_record(userid, m, n):
         sqlStr = 'select %s from geolife where gps_userId =%d order by gps_UTC_unix_timestamp limit %d,%d' %( displist, userid, m, n)
     else:
         sqlStr = 'select %s from geolife where gps_userId =%d order by gps_UTC_unix_timestamp ' %(displist, userid)
-    print sqlStr
+    #print sqlStr
+    #log_init().debug(sqlStr)
     return query_gps(sqlStr)
 
-
+def get_record_total_num(userid) :
+    global dbconn
+    query_str = 'select count(id) from %s where %s = %d' %(table_name, column_name[0], userid)
+    #print query_str
+    if (dbconn == None ):
+        dbconn = connect_db()
+    if (dbconn) :
+        try:
+            cur = dbconn.cursor();
+            count = cur.execute(query_str)
+            #print 'There is %s rows record' %count
+            result = cur.fetchone()
+            #print result
+            #results = cur.fetchall()
+        except MySQLdb.Error,e:
+            warnString = " Mysql Error sql = %d %s " % (e.args[0],e.args[1])
+            log_init().warning(warnString)
+            sys.exit(1)
+    return result[0]
 def test():
     displist = ""
     for oneDisp in  column_name:
@@ -118,5 +159,8 @@ def test():
     print sqlStr
     query_gps(sqlStr)
 
+def get_total_users_list() :
+    sqlStr = "select distinct gps_userid from %s" %table_name
+    return query_sql(sqlStr)
 #test()
 

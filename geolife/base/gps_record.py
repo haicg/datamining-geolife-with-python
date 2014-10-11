@@ -2,6 +2,7 @@
 #  File Name : gps_record.py
 import time
 import logging
+import file_op
 
 LOG_HANDLE = None
 
@@ -19,17 +20,17 @@ class gps_record:
 
     def show(self):
         print self.gps_userid
-        print self.gps_latitude 
+        print self.gps_latitude
         print self.gps_longitude
-        print self.gps_code 
-        print self.gps_altitude 
-        print self.gps_UTC_timestamp 
+        print self.gps_code
+        print self.gps_altitude
+        print self.gps_UTC_timestamp
         print self.gps_UTC_unix_timestamp
 
 
     def __init_with_txt_record__(self, recordStr, userid):
         global LOG_HANDLE
-        record = recordStr.split(',');	
+        record = recordStr.split(',');
         try:
             self.gps_userid = int(userid)
             self.gps_latitude = float(record[0])
@@ -41,7 +42,7 @@ class gps_record:
             time_str = (self.gps_date+' '+self.gps_time).rstrip()
             self.gps_UTC_timestamp = time_str
         except ValueError :
-            print "Value Error " 
+            print "Value Error "
             #logging.warning("Value Error " + userid + recordStr)
             raise ValueError
         try:
@@ -52,7 +53,7 @@ class gps_record:
             #logging.warning("unconverted data remains " + userid + recordStr)
             raise ValueError
         return self
-    
+
     def __init_with_query_sql__(self, recordRes):
         global LOG_HANDLE
         try:
@@ -65,7 +66,26 @@ class gps_record:
             self.gps_UTC_unix_timestamp = recordRes[6]
 
         except ValueError :
-            print "Value Error " 
+            print "Value Error "
             #logging.warning("Value Error " + userid + recordStr)
             raise ValueError
         return self
+    def save(self, filename):
+        try:
+            fp = file_op.open_file_write(filename)
+        except IOError, Error:
+            print "open file error"
+            print Error
+            return
+
+        gps_userid=  "gps_userid = %d\n" %self.gps_userid
+        gps_latitude =  "gps_latitude = %f\n" %self.gps_latitude
+        gps_longitude = "gps_longitude = %f\n" % self.gps_longitude
+        gps_code = "gps_code = %d\n" %self.gps_code
+        gps_altitude =  "gps_altitude = %d\n" %self.gps_altitude
+        gps_UTC_timestamp = "gps_UTC_timestamp = %s\n" %self.gps_UTC_timestamp
+        gps_UTC_unix_timestamp = "gps_UTC_unix_timestamp = %d\n" %self.gps_UTC_unix_timestamp
+
+        fp.write(gps_userid + gps_latitude + gps_longitude + gps_code + gps_altitude + gps_UTC_timestamp + gps_UTC_unix_timestamp)
+        file_op.close_file(fp)
+
