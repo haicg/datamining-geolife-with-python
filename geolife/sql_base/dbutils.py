@@ -58,21 +58,32 @@ def close_db(conn):
         cursor.close()
     conn.close()
 
-def insert_into_db(conn, sql):
-    try:
-        cursor = conn.cursor()
-        n = cursor.execute(sql)
-        print n
-    except MySQLdb.Error,e:
-#WARNING  Mysql Error sql = 1062 Duplicate entry "***" for key 'unique_key'
-        if (e.args[0] == 1062):
-            return 0
-        warnString = " Mysql Error sql = %d %s " % (e.args[0],e.args[1])
-        log_init().warning(warnString)
-        if(e.args[0] == 2006):
-            return 2
+def insert_into_db(sql,conn=None):
+    global dbconn
+    if (conn == None) :
+        if (dbconn == None ):
+            conn = connect_db()
         else:
-            return 0
+            conn = dbconn
+            
+    if (conn) :
+        try:
+            cursor = conn.cursor()
+            n = cursor.execute(sql)
+            conn.commit();
+            print n
+        except MySQLdb.Error,e:
+    #WARNING  Mysql Error sql = 1062 Duplicate entry "***" for key 'unique_key'
+            if (e.args[0] == 1062):
+                return 0
+            warnString = " Mysql Error sql = %d %s " % (e.args[0],e.args[1])
+            log_init().warning(warnString)
+            if(e.args[0] == 2006):
+                return 2
+            else:
+                return 0
+    else :
+        return 0
 
 def insert_gps_record(conn, oneRecord):
     sql = "INSERT INTO geolife(gps_userid, gps_latitude, gps_longitude, gps_code, gps_altitude, gps_UTC_timestamp, gps_UTC_unix_timestamp) \
@@ -80,8 +91,16 @@ VALUES ('%d', '%f', '%f', '%d', '%f', '%s', '%s')" % \
         (oneRecord.gps_userid,oneRecord.gps_latitude,oneRecord.gps_longitude,oneRecord.gps_code,
                 oneRecord.gps_altitude, oneRecord.gps_UTC_timestamp, oneRecord.gps_UTC_unix_timestamp)
         #  print sql
-    return insert_into_db(conn, sql)
+    return insert_into_db(sql,conn)
+    
+def insert_staypoint(s_point,conn=None):
+    sql = "INSERT INTO staypoint(userid, arrival_timestamp, leaving_timestamp, mean_coordinate_latitude,\
+mean_coordinate_longtitude, mean_coordinate_altitude, arrival_point, leaving_point )VALUES ('%d', '%d', '%d', '%f', '%f', '%f','%d','%d')" % \
+        (s_point.userid, s_point.arrival_timestamp, s_point.leaving_timestamp, \
+        s_point.mean_coordinate_latitude, s_point.mean_coordinate_longtitude, \
+        s_point.mean_coordinate_altitude, s_point.arrival_point, s_point.leaving_point)
 
+    return insert_into_db(sql,conn)
 
 
 def query_gps( query_str):
@@ -115,7 +134,7 @@ def query_gps( query_str):
 '''
 userid : user id
 m: the first index
-n: the number of elements, if n <=0 ,get all the ele of user
+n: the number of elements
 '''
 def get_gps_record_time_order(userid, m, n):
     displist = ""

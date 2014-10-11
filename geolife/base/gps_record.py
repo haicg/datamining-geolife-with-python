@@ -17,6 +17,7 @@ class gps_record:
         self.gps_time = None
         self.gps_UTC_timestamp = None
         self.gps_UTC_unix_timestamp = 0
+        self.id = 0
 
     def show(self):
         print self.gps_userid
@@ -64,6 +65,7 @@ class gps_record:
             self.gps_altitude = recordRes[4]
             self.gps_UTC_timestamp = recordRes[5]
             self.gps_UTC_unix_timestamp = recordRes[6]
+            self.id = recordRes[7];
 
         except ValueError :
             print "Value Error "

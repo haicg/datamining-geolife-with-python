@@ -11,7 +11,7 @@ import logging
 
 LOG_HANDLE = None
 
-class gps_record:
+class stay_point:
     def __init__(self):
         self.userid= -1
         self.arrival_point = -1
@@ -21,4 +21,5 @@ class gps_record:
         self.mean_coordinate_latitude = None
         self.mean_coordinate_longtitude = None
         self.mean_coordinate_altitude = None
+        
 

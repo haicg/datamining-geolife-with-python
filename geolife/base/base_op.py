@@ -28,7 +28,6 @@ def get_distance(begin_point, end_point):
     lat2 = float(end_point.gps_latitude)
     lon1 = float(begin_point.gps_longitude)
     lon2 = float(end_point.gps_longitude)
-
     #begin_point.show()
     #end_point.show()
     ''' The unit of the distance is kilometer'''
