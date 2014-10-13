@@ -8,6 +8,8 @@ sql_script_with_data/
 *.log
 *.tmp
 *.txt
+*.csv
+*.cvs
 #
 *.project
 *.pydevproject

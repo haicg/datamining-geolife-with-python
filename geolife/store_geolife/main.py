@@ -61,6 +61,7 @@ def main():
                 print FilePathFullL2
                 if os.path.isdir(FilePathFullL2) :    
                     FilePathListL3 = os.listdir(FilePathFullL2) #20090428051631.plt
+                    FilePathListL3.sort()
                     for FilePathL3 in FilePathListL3:
                         extension = os.path.splitext(FilePathL3) 
                         if extension[1] != '.plt' :
