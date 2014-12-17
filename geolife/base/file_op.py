@@ -7,6 +7,7 @@
 
 
 import errno
+import json
 def close_file(fp):
     try:
         fp. close()
@@ -103,4 +104,23 @@ def get_store_list(filename, listName):
         if (fp):
             close_file(fp);
     return listContext
+
+def savePointsToJson(distPointList, userid, filetype='', fileId = 0 ):
+    if not distPointList:
+        print "Null Value"
+        return
+    datalist = []
+    for p in distPointList:
+        data = []
+        data.append(p.gps_longitude);
+        data.append(p.gps_latitude);
+        data.append(1);
+        datalist.append(data);
+    fileGpoints = "%d_points_dir/points_gps_%s%d.js" %(userid,filetype,fileId)
+    strTmp = "var data%d =" %fileId
+    saveDate = {'data':datalist,'total':len(datalist),"rt_loc_cnt":47764510,"errorno":0,"NearestTime":"2014-08-29 15:20:00","userTime":"2014-08-29 15:32:11"}
+    strTmp += json.dumps(saveDate,sort_keys=False)
+    with open(fileGpoints,"w") as fp:
+        fp.write(strTmp)
+    fp.close()
 

@@ -1,0 +1,25 @@
+#ºöÂÔÎÄ¼ş¼ĞData /ignore the Data dir
+DATA/
+data/
+var_data/
+test/
+result_data/
+sql_script_with_data/
+.metadata/
+
+#ignore pyc,log filetype
+*.pyc
+*.log
+*.tmp
+*.txt
+*.csv
+*.cvs
+#
+*.project
+*.pydevproject
+
+#
+tags
+cscope.files
+cscope.out
+

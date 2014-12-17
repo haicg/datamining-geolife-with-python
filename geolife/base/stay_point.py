@@ -21,5 +21,14 @@ class stay_point:
         self.mean_coordinate_latitude = None
         self.mean_coordinate_longtitude = None
         self.mean_coordinate_altitude = None
+    def printSelf(self):
+        print "userid = %d" %self.userid
+        print "arrival_point = %d" %self.arrival_point
+        print "arrival_timestamp = %d \n arrival_timestr=%s" %(self.arrival_timestamp, time.ctime(self.arrival_timestamp))
+        print "leaving_point = %d" %(self.leaving_point)
+        print "leaving_timestamp = %d \n leaving_timestr=%s" %(self.leaving_timestamp, time.ctime(self.leaving_timestamp))
+        print "mean_coordinate_latitude = %f" %self.mean_coordinate_latitude
+        print "mean_coordinate_longtitude = %f" %self.mean_coordinate_longtitude
+        print "mean_coordinate_altitude = %f" %self.mean_coordinate_altitude
         
 

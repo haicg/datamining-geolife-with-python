@@ -23,6 +23,11 @@ def calc_distance(lat1, lon1, lat2, lon2):
     return miles;
 
 
+'''Return value is the distance with the unit of mile  '''
+def calc_points_distance(p1, p2):
+    return calc_distance(p1.x, p1.y, p2.x, p2.y)
+    
+
 def get_distance(begin_point, end_point):
     lat1 = float(begin_point.gps_latitude)
     lat2 = float(end_point.gps_latitude)
@@ -33,5 +38,3 @@ def get_distance(begin_point, end_point):
     ''' The unit of the distance is kilometer'''
     euclidean_distence = calc_distance(lat1, lon1, lat2, lon2) * 1.609344
     return euclidean_distence
-
-

@@ -31,6 +31,7 @@ def connect_db():
         warnString= "Mysql Error %d: %s" % (e.args[0], e.args[1])
 
         log_init().warning(warnString)
+        print warnString
 
         if(e.args[0] == 1045 or e.args[0] == 1044):
             os._exit(1)
@@ -52,7 +53,12 @@ def query_sql(query_str):
     return results
 
 
-def close_db(conn):
+def close_db(conn=None):
+    global dbconn
+    if (conn == None) :
+        conn = dbconn
+    if (conn == None) :
+        return
     cursor = conn.cursor()
     if(cursor):
         cursor.close()
