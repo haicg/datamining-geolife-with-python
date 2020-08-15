@@ -6,20 +6,16 @@
 #!/usr/bin/python
 
 import math
+from geopy import distance
 
 '''Return value is the distance with the unit of mile  '''
+
+# 这个函数以前计算距离可能有点问题，不够精准，同时对于边界问题处理过于粗暴
+# 这个修改成GeoPy的实现
 def calc_distance(lat1, lon1, lat2, lon2):
-    theta = lon1 -lon2
-    dist = math.sin(math.radians(lat1))*math.sin(math.radians(lat2)) \
-            + math.cos(math.radians(lat1))*math.cos(math.radians(lat2))\
-            * math.cos(math.radians(theta))
-    if dist - 1 > 0 :
-        dist = 1
-    elif dist +1 < 0 :
-        dist = -1
-    dist = math.acos(dist)
-    dist = math.degrees(dist)
-    miles = dist * 60 * 1.1515
+    newport_ri = (lat2, lon2)
+    cleveland_oh = (lat1, lon1,)
+    miles = distance.distance(newport_ri, cleveland_oh).miles
     return miles;
 
 
